@@ -1,9 +1,11 @@
+mainName=Link Creation Daemon
 pathInput=...
 from=From
 to=To
 confirm=Ok
 soft=Soft link
 folder=Folder
+parentFolder=Parent folder
 name=Name
 info=Information
 error=Error

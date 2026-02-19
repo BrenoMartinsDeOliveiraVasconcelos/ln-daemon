@@ -24,7 +24,7 @@ def get_new_folder_path():
     layout = QGridLayout()
 
     # Where the folder will be created
-    path_label = QLabel(strings["folder"]+":")
+    path_label = QLabel(strings["parentFolder"]+":")
     path_input = QLineEdit()
     path_select_button = QPushButton(strings["pathInput"])
     layout.addWidget(path_label, 0, 0)

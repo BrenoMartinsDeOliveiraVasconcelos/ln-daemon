@@ -6,8 +6,8 @@ import os
 class LnDaemon(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("LnDaemon")
         self.strings = helpers.strings
+        self.setWindowTitle(self.strings["mainName"])
         print(self.strings)
 
         # Central widget to hold the layout
