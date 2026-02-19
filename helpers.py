@@ -61,11 +61,11 @@ def get_new_folder_path():
 
     # Ok button
     ok_button = QPushButton(strings["confirm"])
-    layout.addWidget(ok_button, 2, 0, 1, 3)
+    layout.addWidget(ok_button, 2, 0)
 
     # Cancel button
     cancel_button = QPushButton(strings["cancel"])
-    layout.addWidget(cancel_button, 3, 0, 1, 3)
+    layout.addWidget(cancel_button, 2, 1)
 
     def on_ok_button_click():
         if path_input.text() == "":
