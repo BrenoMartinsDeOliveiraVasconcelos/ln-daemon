@@ -2,6 +2,7 @@ import sys
 import helpers
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QCheckBox, QPushButton, QLabel
 import os
+import shutil
 
 class LnDaemon(QMainWindow):
     def __init__(self):
@@ -142,16 +143,28 @@ class LnDaemon(QMainWindow):
 
         # Create link
         try:
+            origin = self.original_path_input.text()
+            target = self.target_path_input.text()
+
+            if self.invert_checkbox.isChecked():
+                shutil.move(origin, target)
+
+                origin = target
+                target = self.original_path_input.text()
+
             if self.link_mode_checkbox.isChecked():
-                os.symlink(self.original_path_input.text(), self.target_path_input.text())
+                os.symlink(origin, target)
             else:
-                os.link(self.original_path_input.text(), self.target_path_input.text())
+                os.link(origin, target)
 
             helpers.info_message(self.strings["success"])
         except PermissionError:
             helpers.error_message(self.strings["pathDeniedNT"])
         except Exception as e:
             helpers.error_message(self.strings["failure"] + ": " + str(e))
+
+        self.target_path_input.setText("")
+        self.original_path_input.setText("")
 
 
 if __name__ == "__main__":
