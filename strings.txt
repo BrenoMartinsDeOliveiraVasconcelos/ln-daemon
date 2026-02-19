@@ -1,0 +1,5 @@
+pathInput=...
+from=From
+to=To
+confirm=Ok
+symbolic=Symbolic
