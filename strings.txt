@@ -19,3 +19,4 @@ folderNameEmpty=The folder name input cannot be empty
 pathInputEmpty=The path input cannot be empty
 pathInputSame=Both paths are the same. This is not allowed.
 pathDeniedNT=The script has no permission to peform this action using the defined paths.
+cancel=Cancel

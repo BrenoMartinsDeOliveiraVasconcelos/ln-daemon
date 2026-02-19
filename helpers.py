@@ -42,6 +42,10 @@ def get_new_folder_path():
     ok_button = QPushButton(strings["confirm"])
     layout.addWidget(ok_button, 2, 0, 1, 3)
 
+    # Cancel button
+    cancel_button = QPushButton(strings["cancel"])
+    layout.addWidget(cancel_button, 3, 0, 1, 3)
+
     def on_ok_button_click():
         if path_input.text() == "":
             error_message(strings["pathInputEmpty"])
@@ -54,12 +58,17 @@ def get_new_folder_path():
         dialog.path = path_input.text() + os.path.sep + name_input.text()
         dialog.close()
 
+    
+    def on_cancel_button_click():
+        dialog.close()
+
     def on_path_select():
         path = get_folder_path()
         path_input.setText(path)
 
     path_select_button.clicked.connect(on_path_select)
     ok_button.clicked.connect(on_ok_button_click)
+    cancel_button.clicked.connect(on_cancel_button_click)
 
     dialog.setLayout(layout)
     dialog.exec()
