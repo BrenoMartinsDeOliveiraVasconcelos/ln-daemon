@@ -30,7 +30,7 @@ class LnDaemon(QMainWindow):
         # Horizontal layout for link mode
         link_mode_layout = QHBoxLayout()
 
-        self.link_mode_checkbox = QCheckBox(self.strings["symbolic"])
+        self.link_mode_checkbox = QCheckBox(self.strings["soft"])
         self.link_mode_checkbox.setChecked(True)
         
         self.is_folder_checkbox = QCheckBox(self.strings["folder"])
@@ -82,6 +82,7 @@ class LnDaemon(QMainWindow):
     
     def on_folder_checked(self):
         # Hard links cannot be created on folders
+        print("Set link mode to soft")
         self.link_mode_checkbox.setChecked(True)
 
 
