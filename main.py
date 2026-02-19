@@ -32,7 +32,12 @@ class LnDaemon(QMainWindow):
 
         self.link_mode_checkbox = QCheckBox(self.strings["symbolic"])
         self.link_mode_checkbox.setChecked(True)
+        
+        self.is_folder_checkbox = QCheckBox(self.strings["folder"])
+        self.is_folder_checkbox.setChecked(False)
+
         link_mode_layout.addWidget(self.link_mode_checkbox)
+        link_mode_layout.addWidget(self.is_folder_checkbox)
 
         #Horizontal layout for target path
         t_path_layout = QHBoxLayout()
@@ -40,6 +45,7 @@ class LnDaemon(QMainWindow):
         self.target_path_label = QLabel(self.strings["to"]+":")
         self.target_path_input = QLineEdit()
         self.target_path_select_button = QPushButton(self.strings["pathInput"])
+    
         t_path_layout.addWidget(self.target_path_label)
         t_path_layout.addWidget(self.target_path_input)
         t_path_layout.addWidget(self.target_path_select_button)
@@ -55,6 +61,28 @@ class LnDaemon(QMainWindow):
         layout.addLayout(link_mode_layout)
         layout.addLayout(t_path_layout)
         layout.addLayout(action_layout)
+
+
+        # Connect signals
+        self.target_path_select_button.clicked.connect(lambda: self.on_path_select(self.target_path_input))
+        self.original_path_select_button.clicked.connect(lambda: self.on_path_select(self.original_path_input))
+        self.is_folder_checkbox.clicked.connect(self.on_folder_checked)
+
+
+    def on_path_select(self, label):
+
+        path = "."
+        if self.is_folder_checkbox.isChecked():
+            path = helpers.get_folder_path()
+        else:
+            path = helpers.get_file_path()
+
+        label.setText(path)
+
+    
+    def on_folder_checked(self):
+        # Hard links cannot be created on folders
+        self.link_mode_checkbox.setChecked(True)
 
 
 if __name__ == "__main__":
