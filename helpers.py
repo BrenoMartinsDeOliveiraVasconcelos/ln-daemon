@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QFileDialog, QDialog, QMessageBox, QGridLayout, QLabel, QLineEdit, QPushButton
 
 def get_txt_dict(path: str):
     with open(path, 'r') as f:
@@ -11,6 +11,61 @@ def get_file_path():
 
 def get_folder_path():
     return QFileDialog.getExistingDirectory()
+
+def get_new_file_path():
+    return QFileDialog.getSaveFileName()[0]
+
+def get_new_folder_path():
+    dialog = QDialog()
+    dialog.path = ""
+
+    dialog.setWindowTitle(strings["getFolder"])
+
+    layout = QGridLayout()
+
+    # Where the folder will be created
+    path_label = QLabel(strings["folder"]+":")
+    path_input = QLineEdit()
+    path_select_button = QPushButton(strings["pathInput"])
+    layout.addWidget(path_label, 0, 0)
+    layout.addWidget(path_input, 0, 1)
+    layout.addWidget(path_select_button, 0, 2)
+
+    # Folder name
+    name_label = QLabel(strings["name"]+":")
+    name_input = QLineEdit()
+    layout.addWidget(name_label, 1, 0)
+    layout.addWidget(name_input, 1, 1)
+
+    # Ok button
+    ok_button = QPushButton(strings["confirm"])
+    layout.addWidget(ok_button, 2, 0, 1, 3)
+
+    def on_ok_button_click():
+        if path_input.text() == "":
+            error_message(strings["pathInputEmpty"])
+            return
+
+        if name_input.text() == "":
+            error_message(strings["folderNameEmpty"])
+            return
+        
+        dialog.path = path_input.text() + "/" + name_input.text()
+        dialog.close()
+
+    def on_path_select():
+        path = get_folder_path()
+        path_input.setText(path)
+
+    path_select_button.clicked.connect(on_path_select)
+    ok_button.clicked.connect(on_ok_button_click)
+
+    dialog.setLayout(layout)
+    dialog.exec()
+
+    return dialog.path
+
+
 
 def info_message(message: str):
     QMessageBox.information(None, strings["info"], message)

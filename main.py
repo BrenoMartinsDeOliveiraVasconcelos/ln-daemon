@@ -1,6 +1,7 @@
 import sys
 import helpers
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QCheckBox, QPushButton, QLabel
+import os
 
 class LnDaemon(QMainWindow):
     def __init__(self):
@@ -64,19 +65,25 @@ class LnDaemon(QMainWindow):
 
 
         # Connect signals
-        self.target_path_select_button.clicked.connect(lambda: self.on_path_select(self.target_path_input))
+        self.target_path_select_button.clicked.connect(lambda: self.on_path_select(self.target_path_input, True))
         self.original_path_select_button.clicked.connect(lambda: self.on_path_select(self.original_path_input))
         self.is_folder_checkbox.clicked.connect(self.on_folder_checked)
         self.action_button.clicked.connect(self.on_action_button_click)
 
 
-    def on_path_select(self, label):
+    def on_path_select(self, label, is_target=False):
 
         path = "."
         if self.is_folder_checkbox.isChecked():
-            path = helpers.get_folder_path()
+            if is_target:
+                path = helpers.get_new_folder_path()
+            else:
+                path = helpers.get_folder_path()
         else:
-            path = helpers.get_file_path()
+            if is_target:
+                path = helpers.get_new_file_path()
+            else:
+                path = helpers.get_file_path()
 
         label.setText(path)
 
@@ -89,8 +96,36 @@ class LnDaemon(QMainWindow):
     
 
     def on_action_button_click(self):
-        print("Action button clicked")
-        helpers.info_message("Action button clicked")
+        # CHeck input emptiness
+        if self.original_path_input.text() == "" or self.target_path_input.text() == "":
+            helpers.error_message(self.strings["pathInputEmpty"])
+            return
+
+        # Check path existence
+        if not os.path.exists(self.original_path_input.text()):
+            helpers.error_message(self.strings["pathInvalid"].replace("$", self.original_path_input.text()))
+            return
+        
+        # Check if target path exists
+        if os.path.exists(self.target_path_input.text()):
+            helpers.error_message(self.strings["pathExists"].replace("$", self.target_path_input.text()))
+            return
+
+        # Check path accessibility
+        if not os.access(self.original_path_input.text(), os.W_OK): 
+            helpers.error_message(self.strings["pathDenied"].replace("$", self.original_path_input.text()))
+            return
+
+        # Create link
+        try:
+            if self.link_mode_checkbox.isChecked():
+                os.symlink(self.original_path_input.text(), self.target_path_input.text())
+            else:
+                os.link(self.original_path_input.text(), self.target_path_input.text())
+
+            helpers.info_message(self.strings["success"])
+        except Exception as e:
+            helpers.error_message(self.strings["failure"] + ": " + str(e))
 
 
 if __name__ == "__main__":
