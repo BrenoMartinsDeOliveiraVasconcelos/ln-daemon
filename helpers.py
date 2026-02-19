@@ -1,11 +1,25 @@
 from PyQt6.QtWidgets import QFileDialog, QDialog, QMessageBox, QGridLayout, QLabel, QLineEdit, QPushButton
 import os
+import locale
+
+original_cwd = os.getcwd()
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 def get_txt_dict(path: str):
     with open(path, 'r') as f:
         return {line.split("=")[0]: line.split("=")[1].strip() for line in f.readlines()}
 
-strings = get_txt_dict("strings.txt")
+
+def get_locale():
+    return locale.getlocale()[0].split("_")[0]
+
+english_str = "strings.txt"
+localised_str = "strings_" + get_locale() + ".txt"
+
+if os.path.exists(localised_str):
+    strings = get_txt_dict(localised_str)
+else:
+    strings = get_txt_dict(english_str)
 
 def get_file_path():
     return QFileDialog.getOpenFileName()[0]

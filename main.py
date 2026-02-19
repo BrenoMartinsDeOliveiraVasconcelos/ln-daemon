@@ -146,4 +146,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = LnDaemon()
     window.show()
-    sys.exit(app.exec())
+    ext_code = app.exec()
+
+    os.chdir(helpers.original_cwd)
+    sys.exit(ext_code)
