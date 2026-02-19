@@ -6,7 +6,7 @@ class LnDaemon(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("LnDaemon")
-        self.strings = helpers.get_txt_dict("strings.txt")
+        self.strings = helpers.strings
         print(self.strings)
 
         # Central widget to hold the layout
@@ -67,6 +67,7 @@ class LnDaemon(QMainWindow):
         self.target_path_select_button.clicked.connect(lambda: self.on_path_select(self.target_path_input))
         self.original_path_select_button.clicked.connect(lambda: self.on_path_select(self.original_path_input))
         self.is_folder_checkbox.clicked.connect(self.on_folder_checked)
+        self.action_button.clicked.connect(self.on_action_button_click)
 
 
     def on_path_select(self, label):
@@ -84,6 +85,12 @@ class LnDaemon(QMainWindow):
         # Hard links cannot be created on folders
         print("Set link mode to soft")
         self.link_mode_checkbox.setChecked(True)
+        return
+    
+
+    def on_action_button_click(self):
+        print("Action button clicked")
+        helpers.info_message("Action button clicked")
 
 
 if __name__ == "__main__":

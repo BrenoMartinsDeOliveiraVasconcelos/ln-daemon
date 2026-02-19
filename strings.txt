@@ -4,3 +4,5 @@ to=To
 confirm=Ok
 soft=Soft link
 folder=Folder
+info=Information
+error=Error
