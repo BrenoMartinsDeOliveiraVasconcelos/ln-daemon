@@ -67,7 +67,8 @@ class LnDaemon(QMainWindow):
         # Connect signals
         self.target_path_select_button.clicked.connect(lambda: self.on_path_select(self.target_path_input, True))
         self.original_path_select_button.clicked.connect(lambda: self.on_path_select(self.original_path_input))
-        self.is_folder_checkbox.clicked.connect(self.on_folder_checked)
+        self.link_mode_checkbox.stateChanged.connect(self.on_link_mode_updated)
+        self.is_folder_checkbox.stateChanged.connect(self.on_folder_checked)
         self.action_button.clicked.connect(self.on_action_button_click)
 
 
@@ -88,33 +89,44 @@ class LnDaemon(QMainWindow):
         label.setText(path)
 
     
+    def on_link_mode_updated(self):
+        if not self.link_mode_checkbox.isChecked():
+            self.is_folder_checkbox.setChecked(False)
+
+    
     def on_folder_checked(self):
         # Hard links cannot be created on folders
-        print("Set link mode to soft")
-        self.link_mode_checkbox.setChecked(True)
+        if self.is_folder_checkbox.isChecked():
+            self.link_mode_checkbox.setChecked(True)
         return
     
 
     def on_action_button_click(self):
-        # CHeck input emptiness
+        # Check input emptiness
         if self.original_path_input.text() == "" or self.target_path_input.text() == "":
             helpers.error_message(self.strings["pathInputEmpty"])
+            return
+        
+        # CHeck if both paths are equal
+        if self.original_path_input.text() == self.target_path_input.text():
+            helpers.error_message(self.strings["pathInputSame"])
             return
 
         # Check path existence
         if not os.path.exists(self.original_path_input.text()):
-            helpers.error_message(self.strings["pathInvalid"].replace("$", self.original_path_input.text()))
+            helpers.error_message(self.strings["pathInvalid"].replace("\\0", self.original_path_input.text()))
             return
         
         # Check if target path exists
         if os.path.exists(self.target_path_input.text()):
-            helpers.error_message(self.strings["pathExists"].replace("$", self.target_path_input.text()))
+            helpers.error_message(self.strings["pathExists"].replace("\\0", self.target_path_input.text()))
             return
 
         # Check path accessibility
-        if not os.access(self.original_path_input.text(), os.W_OK): 
-            helpers.error_message(self.strings["pathDenied"].replace("$", self.original_path_input.text()))
+        if not os.access(os.path.split(self.target_path_input.text())[0], os.W_OK) and os.name == "posix": 
+            helpers.error_message(self.strings["pathDenied"].replace("\\0", self.target_path_input.text()))
             return
+
 
         # Create link
         try:
@@ -124,6 +136,8 @@ class LnDaemon(QMainWindow):
                 os.link(self.original_path_input.text(), self.target_path_input.text())
 
             helpers.info_message(self.strings["success"])
+        except PermissionError:
+            helpers.error_message(self.strings["pathDeniedNT"])
         except Exception as e:
             helpers.error_message(self.strings["failure"] + ": " + str(e))
 

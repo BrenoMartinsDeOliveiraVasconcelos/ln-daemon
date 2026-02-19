@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QFileDialog, QDialog, QMessageBox, QGridLayout, QLabel, QLineEdit, QPushButton
+import os
 
 def get_txt_dict(path: str):
     with open(path, 'r') as f:
@@ -50,7 +51,7 @@ def get_new_folder_path():
             error_message(strings["folderNameEmpty"])
             return
         
-        dialog.path = path_input.text() + "/" + name_input.text()
+        dialog.path = path_input.text() + os.path.sep + name_input.text()
         dialog.close()
 
     def on_path_select():
