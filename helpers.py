@@ -103,3 +103,6 @@ def info_message(message: str):
 
 def error_message(message: str):
     QMessageBox.critical(None, strings["error"], message)
+
+def warning_message(message: str):
+    QMessageBox.warning(None, strings["warning"], message)

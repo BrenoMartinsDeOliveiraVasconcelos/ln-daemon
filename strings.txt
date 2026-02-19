@@ -20,3 +20,6 @@ pathInputEmpty=The path input cannot be empty
 pathInputSame=Both paths are the same. This is not allowed.
 pathDeniedNT=The script has no permission to peform this action using the defined paths.
 cancel=Cancel
+dangerWarning=This option can cause harm to your system if something goes wrong. It is recommended to do a backup bedore continuing.
+invert=Move origin to target and link
+warning=Warning

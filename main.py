@@ -57,11 +57,18 @@ class LnDaemon(QMainWindow):
         self.action_button = QPushButton(self.strings["confirm"])
         action_layout.addWidget(self.action_button)
 
+        # Horizontal layout for inverting folders
+        invert_layout = QHBoxLayout()
+
+        self.invert_checkbox = QCheckBox(self.strings["invert"])
+        invert_layout.addWidget(self.invert_checkbox)
+
         # Adding
         layout.addLayout(o_path_layout)
         layout.addLayout(link_mode_layout)
         layout.addLayout(t_path_layout)
         layout.addLayout(action_layout)
+        layout.addLayout(invert_layout)
 
 
         # Connect signals
@@ -70,6 +77,7 @@ class LnDaemon(QMainWindow):
         self.link_mode_checkbox.stateChanged.connect(self.on_link_mode_updated)
         self.is_folder_checkbox.stateChanged.connect(self.on_folder_checked)
         self.action_button.clicked.connect(self.on_action_button_click)
+        self.invert_checkbox.stateChanged.connect(self.on_invert_checked)
 
 
     def on_path_select(self, label, is_target=False):
@@ -99,6 +107,10 @@ class LnDaemon(QMainWindow):
         if self.is_folder_checkbox.isChecked():
             self.link_mode_checkbox.setChecked(True)
         return
+    
+    def on_invert_checked(self):
+        if self.invert_checkbox.isChecked():
+            helpers.warning_message(self.strings["dangerWarning"])
     
 
     def on_action_button_click(self):
