@@ -23,3 +23,4 @@ cancel=Cancel
 dangerWarning=This option can cause harm to your system if something goes wrong. It is recommended to do a backup bedore continuing.
 invert=Move origin to target and link
 warning=Warning
+wait=Proccessing...

@@ -143,6 +143,10 @@ class LnDaemon(QMainWindow):
 
         # Create link
         try:
+            self.action_button.setEnabled(False)
+            self.action_button.setText(self.strings["wait"])
+
+            self.update()
             origin = self.original_path_input.text()
             target = self.target_path_input.text()
 
@@ -165,6 +169,9 @@ class LnDaemon(QMainWindow):
 
         self.target_path_input.setText("")
         self.original_path_input.setText("")
+        self.action_button.setText(self.strings["confirm"])
+        self.action_button.setEnabled(True)
+        self.update()
 
 
 if __name__ == "__main__":
